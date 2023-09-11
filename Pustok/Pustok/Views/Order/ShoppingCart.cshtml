@@ -1,0 +1,262 @@
+﻿@using Pustok.Contracts;
+@model List<ShoppingCartViewModel>
+@inject IFileService fileService
+@inject IUserService userService
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Pronia - Cart</title>
+    <meta name="robots" content="index, follow" />
+    <meta name="description"
+          content="Pronia plant store bootstrap 5 template is an awesome website template for any home plant shop." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Favicon -->
+    <link rel="shortcut icon"
+          type="image/x-icon"
+          href="assets/images/favicon.ico" />
+
+    <!-- CSS
+    ============================================ -->
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="assets/css/Pe-icon-7-stroke.css" />
+    <link rel="stylesheet" href="assets/css/animate.min.css" />
+    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="assets/css/nice-select.css" />
+    <link rel="stylesheet" href="assets/css/magnific-popup.min.css" />
+    <link rel="stylesheet" href="assets/css/ion.rangeSlider.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+
+
+    <!-- Style CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        img {
+            max-width: 100px;
+        }
+
+        .remove-icon {
+            color: #ff0000;
+            cursor: pointer;
+        }
+
+            .remove-icon:hover {
+                color: #cc0000;
+            }
+
+        .quantity-icon {
+            color: #03b300;
+            font-size: 20px;
+            vertical-align: middle;
+        }
+
+        .quantity-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 10px 20px;
+        }
+
+        .total-price {
+            font-size: 18px;
+        }
+
+        .checkout-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .checkout-button:hover {
+                background-color: #555;
+            }
+    </style>
+    <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+    <div class="preloader-activate preloader-active open_tm_preloader">
+        <div class="preloader-area-wrap">
+            <div class="spinner d-flex justify-content-center align-items-center h-100">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+            </div>
+        </div>
+    </div>
+    <div class="main-wrapper">
+        <!-- Begin Main Header Area -->
+        
+        <!-- Main Header Area End Here -->
+        <!-- Begin Main Content Area -->
+        <main class="main-content">
+            <div class="breadcrumb-area breadcrumb-height"
+                 data-bg-image="assets/images/breadcrumb/bg/1-1-1919x388.jpg">
+                <div class="container h-100">
+                    <div class="row h-100">
+                        <div class="col-lg-12">
+                            <div class="breadcrumb-item">
+                                <h2 class="breadcrumb-heading">Cart Page</h2>
+                                <ul>
+                                    <li>
+                                        <a href="index.html">Home</a>
+                                    </li>
+                                    <li>Cart Page</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="cart-area section-space-y-axis-100">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <form action="javascript:void(0)">
+                                <div class="table-content table-responsive">
+
+                                    <h1>Shopping Cart</h1>
+                                    <table>
+                                        <tr>
+                                            <th>Remove</th>
+                                            <th>Image</th>
+                                            <th>Product</th>
+                                            <th>Individual Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total Price</th>
+                                        </tr>
+                                       
+                                        <!-- Product`s -->
+                                        @foreach(var product in Model)
+                                        {
+                                            <tr>
+
+                                                <td><a id="remove-button" ><i class="fa-solid fa-trash-can fa-2xl remove-icon"></i></a></td>
+                                                <td><img src="@fileService.GetStaticFilesUrl(CustomUploadDirectories.Products, product.ImageUrl)" alt="Product 1"></td>
+                                                <td>@product.Product_Name</td>
+                                                <td>$@product.Price</td>
+                                                <td>
+                                                    <i class="fa-solid fa-cart-shopping fa-2xl quantity-icon"></i>
+                                                    <span class="quantity-value" id="product1Quantity">@product.Quantity</span>
+                                                </td>
+                                                <td>$@product.Total_Price</td>
+                                            </tr>
+
+                                       
+                                        }
+                                        <!-- Add more product rows as needed -->
+                                    </table>
+                                    <div class="total-section">
+                                        <div class="total-price">
+                                            @{
+                                                decimal result = 0;
+                                                @foreach (var item in Model)
+                                                {
+                                                    result += item.Price * item.Quantity;
+                                                }
+                                            }
+                                            
+                                            Result: $@result; <!-- You can update this value with JavaScript -->
+                                        </div>
+                                        @if (userService.IsCurrentUserAuthenticated())
+                                        {
+                                            <button class="checkout-button">Checkout</button>
+
+                                        }
+                                        
+                                    </div>
+                                </div>
+                               
+                               
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Main Content Area End Here -->
+        <!-- Begin Footer Area -->
+       
+        <!-- Footer Area End Here -->
+        <!-- Begin Scroll To Top -->
+        <a class="scroll-to-top" href="">
+            <i class="fa fa-angle-double-up"></i>
+        </a>
+        <!-- Scroll To Top End Here -->
+    </div>
+
+    <!-- Global Vendor, plugins JS -->
+    <!-- JS Files
+    ============================================ -->
+
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/vendor/jquery-migrate-3.3.2.min.js"></script>
+    <script src="assets/js/vendor/jquery.waypoints.js"></script>
+    <script src="assets/js/vendor/modernizr-3.11.2.min.js"></script>
+    <script src="assets/js/plugins/wow.min.js"></script>
+    <script src="assets/js/plugins/swiper-bundle.min.js"></script>
+    <script src="assets/js/plugins/jquery.nice-select.js"></script>
+    <script src="assets/js/plugins/parallax.min.js"></script>
+    <script src="assets/js/plugins/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/plugins/tippy.min.js"></script>
+    <script src="assets/js/plugins/ion.rangeSlider.min.js"></script>
+    <script src="assets/js/plugins/mailchimp-ajax.js"></script>
+    <script src="assets/js/plugins/jquery.counterup.js"></script>
+
+    <!--Main JS (Common Activation Codes)-->
+    <script src="assets/js/main.js"></script>
+    <script>
+       
+
+    </script>
+   
+</body>
+</html>
